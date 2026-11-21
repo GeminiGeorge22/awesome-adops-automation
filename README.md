@@ -120,3 +120,5 @@ Contributions are welcome. Before opening a pull request:
 ## License
 
 Released under [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/). To the extent possible under law, the author(s) have waived all copyright and related rights to this work.
+
+[![CC0](https://img.shields.io/badge/CC0-1.0-lightgrey?style=flat-square)](LICENSE)
