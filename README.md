@@ -1,6 +1,6 @@
-<div align="center">
+[![awesome-lead-generation](image/awesome-adops-automation.png)](https://github.com/adops-tool/awesome-adops-automation/pulls)
 
-# Awesome AdOps Automation
+[![animated-line](https://github.com/readme-SVG/animated-line/blob/main/STORAGE/line-svg-3D444D.svg)](https://github.com/readme-SVG/animated-line) <!-- -SVG-Line- -->
 
 **A curated list of code, SDKs, and pipelines that replace manual trafficking, QA, and reporting work with scripts.**
 
