@@ -6,24 +6,57 @@ Validates:
      `![icon](image/alg_R.png) [Name](https://url) - description`
      (github icon -> alg_R.png, web icon -> alg_I.png)
   2. every referenced image exists on disk
-  3. every Table of Contents anchor matches the generated anchor for an H2/H1 heading
+  3. every Table of Contents anchor matches the generated anchor for an H2 heading
+  4. entry URLs do not use common search or redirect endpoints
 
+The URL check is heuristic; contributors should still verify links manually.
 Exits 0 when everything passes, 1 otherwise.
 """
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 README = Path(__file__).resolve().parent.parent / "README.md"
 ROOT = README.parent
 
 ICON_RE = re.compile(
-    r"^(!\[(github|web)\]\((image/alg_[RI]\.png)\))\s+(\[.+?\]\(https?://[^)\s]+\))\s+-\s+(.+)$"
+    r"^!\[(?P<icon>github|web)\]\((?P<image>image/alg_[RI]\.png)\)\s+"
+    r"\[(?P<name>[^\]]+)\]\((?P<url>https?://[^)\s]+)\)\s+-\s+(?P<description>.+)$"
 )
 TOC_LINK_RE = re.compile(r"^-\s+\[(.+?)\]\(#([^)]+)\)\s*$", re.MULTILINE)
 HEADING_RE = re.compile(r"^(#{1,2})\s+(.*)$", re.MULTILINE)
 
+# Check actual redirect/search endpoints rather than words in resource names or
+# arbitrary paths (e.g. Search Ads 360 or a project called redirect-checker).
+SHORTENER_HOSTS = {
+    "bit.ly", "buff.ly", "goo.gl", "l.facebook.com", "lnkd.in", "ow.ly",
+    "t.co", "tinyurl.com",
+}
+SEARCH_OR_REDIRECT_PATHS = {
+    "google.com": {"/search", "/url", "/imgres", "/goto"},
+    "www.google.com": {"/search", "/url", "/imgres", "/goto"},
+    "bing.com": {"/search"},
+    "www.bing.com": {"/search"},
+    "duckduckgo.com": {"", "/l"},
+    "www.duckduckgo.com": {"", "/l"},
+    "search.yahoo.com": {"", "/search"},
+    "search.brave.com": {"", "/search"},
+}
+
 failures = []
+
+
+def is_indirect_url(url):
+    """Recognize common search and redirect URLs without blocking direct links."""
+    parts = urlsplit(url)
+    if not parts.hostname:
+        raise ValueError("URL must include a hostname")
+    host = parts.hostname.lower().rstrip(".")
+    path = parts.path.lower().rstrip("/")
+    if host in SHORTENER_HOSTS or (host.startswith("www.") and host[4:] in SHORTENER_HOSTS):
+        return True
+    return path in SEARCH_OR_REDIRECT_PATHS.get(host, set())
 
 
 def anchor(heading):
@@ -34,6 +67,7 @@ def anchor(heading):
 
 
 def main():
+    failures.clear()
     if not README.exists():
         failures.append(f"README.md not found at {README}")
         print_failures()
@@ -51,13 +85,19 @@ def main():
             if not m:
                 failures.append(f"line {i}: entry line does not match the required format")
                 continue
-            icon, image, link, desc = m.group(2), m.group(3), m.group(4), m.group(5)
+            icon = m.group("icon")
+            image = m.group("image")
+            url = m.group("url")
+            desc = m.group("description")
             if icon == "github" and image != "image/alg_R.png":
                 failures.append(f"line {i}: github icon must use image/alg_R.png, got {image}")
             if icon == "web" and image != "image/alg_I.png":
                 failures.append(f"line {i}: web icon must use image/alg_I.png, got {image}")
-            if "search" in link.lower() or "redirect" in link.lower():
-                failures.append(f"line {i}: link looks like a search/redirect service: {link}")
+            try:
+                if is_indirect_url(url):
+                    failures.append(f"line {i}: link looks like a search/redirect service: {url}")
+            except ValueError:
+                failures.append(f"line {i}: invalid link URL: {url}")
             if len(desc) < 10:
                 failures.append(f"line {i}: description looks too short")
 
