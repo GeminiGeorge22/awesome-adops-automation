@@ -1,3 +1,8 @@
+[![CONTRIBUTING](https://github.com/OstinUA/Promt-AI-Helper/blob/main/Additional%20files/Image/CONTRIBUTING.svg)](https://github.com/adops-tool)
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-3e80ed?style=for-the-badge&logo=github&logoColor=white)](https://github.com/adops-tool/awesome-adops-automation/pulls)
+[![Open Source](https://img.shields.io/badge/Open_Source-Yes-brightgreen?style=for-the-badge&logo=open-source&logoColor=white)](https://github.com/adops-tool/awesome-adops-automation/pulls)
+
 # Contributing to Awesome AdOps Automation
 
 First off, thank you for considering contributing to Awesome AdOps Automation. We appreciate your time and effort in helping us build the ultimate curated list of tools that replace manual trafficking, QA, and reporting work with scripts.
