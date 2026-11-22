@@ -15,9 +15,10 @@ By participating in this project you agree to abide by our [Code of Conduct](COD
 
 Please ensure your submission adheres to the following core criteria:
 
-- **Relevance:** The tool must have a clear AI, SDK or scripting component that is an essential part of the modern AdOps stack.
-- **Active Maintenance:** We only accept active projects. Abandoned, archived or unmaintained tools will not be merged.
-- **Direct Links Only:** Absolutely no affiliate, tracking, or referral links are allowed.
+- **Relevance:** The resource must support AdOps automation, for example through an API, SDK, script, validator, pipeline, or practical documentation.
+- **Active Maintenance:** New projects must be active. Existing historical entries are labeled and are not a precedent for adding abandoned or archived tools.
+- **Direct Links Only:** Link to the original project or documentation, without affiliate, tracking, or referral parameters.
+- **Accuracy:** Check the project's current capabilities, API version, licensing, and access requirements; clearly label experimental or read-only tools when relevant.
 
 ## Description Standards
 
@@ -44,11 +45,12 @@ To add a new tool to the list, please follow these steps:
    ```
 
    Do not include pricing or promotional claims in descriptions.
-5. **Run the checks locally:** This repository does not yet run server-side CI checks, so validate the format yourself:
+5. **Run the checks locally:** This repository does not yet run server-side CI checks, so validate your changes yourself:
    ```bash
    python3 scripts/check_readme.py
+   python3 -m unittest discover -s scripts -p 'test_*.py'
    ```
-   The checker verifies every entry line follows the format above, that referenced images exist, and that the Table of Contents anchors resolve.
+   The checker verifies entry format, referenced images, Table of Contents anchors, and common search/redirect entry URLs. It does not verify that external links work or that a project's description is accurate; check those manually.
 6. **Create a Pull Request:** Submit your PR with a clear and descriptive title using the following format: `Add [Tool Name]`
 
 ## What gets rejected
